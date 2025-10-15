@@ -1,0 +1,27 @@
+{
+  "bank": "HDFC Bank",
+  "cardholder_name": "Hamiz A R Pathan",
+  "card_last_4": "4567",
+  "statement_period": null,
+  "total_due": 14532.75,
+  "due_date": "10-Oct-2025",
+  "total_spent": 23200.0,
+  "transactions": [
+    {
+      "date": "12-Sep-2025",
+      "description": "Amazon India Marketplace",
+      "amount": 1299.0
+    },
+    {
+      "date": "15-Sep-2025",
+      "description": "Paytm Wallet - Mobile Recharge",
+      "amount": 399.0
+    },
+    {
+      "date": "20-Sep-2025",
+      "description": "Starbucks Coffee Bangalore",
+      "amount": 649.5
+    }
+  ],
+  "_confidence": 0.86
+}

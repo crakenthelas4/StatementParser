@@ -1,0 +1,27 @@
+{
+  "bank": "HDFC Bank",
+  "cardholder_name": "Priya Sharma",
+  "card_last_4": "1122",
+  "statement_period": null,
+  "total_due": 12500.0,
+  "due_date": "20-Oct-2025",
+  "total_spent": 19800.7,
+  "transactions": [
+    {
+      "date": "07-Sep-2025",
+      "description": "Myntra Purchase",
+      "amount": 1999.99
+    },
+    {
+      "date": "21-Sep-2025",
+      "description": "OLA Ride",
+      "amount": 279.71
+    },
+    {
+      "date": "28-Sep-2025",
+      "description": "Cafe Coffee Day",
+      "amount": 120.0
+    }
+  ],
+  "_confidence": 0.86
+}

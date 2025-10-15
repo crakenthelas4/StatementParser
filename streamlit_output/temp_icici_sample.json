@@ -1,0 +1,27 @@
+{
+  "bank": "HDFC Bank",
+  "cardholder_name": "Rahul Mehta",
+  "card_last_4": "6789",
+  "statement_period": null,
+  "total_due": 5020.0,
+  "due_date": "05-Nov-2025",
+  "total_spent": 9800.0,
+  "transactions": [
+    {
+      "date": "02-Sep-2025",
+      "description": "BigBasket Grocery",
+      "amount": 750.0
+    },
+    {
+      "date": "18-Sep-2025",
+      "description": "Airline - Indigo",
+      "amount": 3200.0
+    },
+    {
+      "date": "25-Sep-2025",
+      "description": "Dominos Pizza",
+      "amount": 150.0
+    }
+  ],
+  "_confidence": 0.86
+}

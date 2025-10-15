@@ -1,0 +1,27 @@
+{
+  "bank": "HDFC Bank",
+  "cardholder_name": "Aisha Khan",
+  "card_last_4": "2345",
+  "statement_period": null,
+  "total_due": 8230.5,
+  "due_date": "15-Oct-2025",
+  "total_spent": 15400.25,
+  "transactions": [
+    {
+      "date": "05-Sep-2025",
+      "description": "Flipkart Purchase",
+      "amount": 2200.0
+    },
+    {
+      "date": "11-Sep-2025",
+      "description": "Uber Ride",
+      "amount": 320.75
+    },
+    {
+      "date": "19-Sep-2025",
+      "description": "Zomato Order",
+      "amount": 450.25
+    }
+  ],
+  "_confidence": 0.86
+}
