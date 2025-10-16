@@ -1,82 +1,74 @@
-# app.py
 import streamlit as st
 import json
 import os
-import matplotlib.pyplot as plt
+import pandas as pd
 from src.main import parse_file
 
-st.set_page_config(page_title="Credit Card Parser", layout="wide")
+# --- PAGE CONFIGURATION ---
+st.set_page_config(page_title="Statement Parser", layout="centered")
 
-# --- Sidebar ---
-st.sidebar.title("About")
-st.sidebar.info(
-    "This is a Smart Credit Card Statement Parser that extracts key information "
-    "from your credit card statements."
-)
-st.sidebar.title("How to use")
-st.sidebar.markdown(
-    "1. **Upload your PDF statement.**\n"
-    "2. **The app will parse the data.**\n"
-    "3. **View and download the extracted JSON.**"
-)
+# --- HEADER ---
+st.markdown("### Statement Parser") 
+st.write("Upload a PDF statement to extract the 5 key data points as required.")
 
-# --- Main Page ---
-st.title("Smart Credit Card Statement Parser 💳")
 
-uploaded_file = st.file_uploader("Upload a credit card PDF", type=["pdf"])
 
-if uploaded_file:
-    # Save uploaded file temporarily
-    temp_dir = "temp_files"
-    os.makedirs(temp_dir, exist_ok=True)
-    temp_path = os.path.join(temp_dir, uploaded_file.name)
+# --- SESSION STATE INITIALIZATION ---
+if 'parsed_data' not in st.session_state:
+    st.session_state.parsed_data = None
 
-    with open(temp_path, "wb") as f:
-        f.write(uploaded_file.getbuffer())
+# --- UI LOGIC ---
+if st.session_state.parsed_data is None:
+    uploaded_file = st.file_uploader(
+        "Choose a credit card statement PDF",
+        type=["pdf"],
+        label_visibility="collapsed"
+    )
 
-    with st.spinner(f"Parsing {uploaded_file.name}..."):
-        # Parse PDF
-        output_path = parse_file(temp_path, output_dir="streamlit_output")
+    if uploaded_file:
+        temp_dir = "temp_files"
+        os.makedirs(temp_dir, exist_ok=True)
+        temp_path = os.path.join(temp_dir, uploaded_file.name)
 
-    if output_path:
-        # Display parsed JSON
-        with open(output_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
+        with open(temp_path, "wb") as f:
+            f.write(uploaded_file.getbuffer())
 
-        st.success("Successfully parsed the statement!")
+        with st.spinner(f"Analyzing {uploaded_file.name}..."):
+            output_path = parse_file(temp_path, output_dir="streamlit_output")
 
-        col1, col2 = st.columns(2)
+        if output_path:
+            with open(output_path, "r", encoding="utf-8") as f:
+                st.session_state.parsed_data = json.load(f)
+            os.remove(temp_path)
+            st.rerun()
+        else:
+            st.error("Could not parse the PDF. Please try another file.")
 
-        with col1:
-            st.subheader("Extracted Information")
-            st.json(data)
+else:
+    st.success("Successfully extracted the key information!")
+    data = st.session_state.parsed_data
 
-            # Add a download button for the JSON data
-            st.download_button(
-                label="Download JSON",
-                data=json.dumps(data, indent=2),
-                file_name=f"{os.path.splitext(uploaded_file.name)[0]}.json",
-                mime="application/json",
-            )
+    st.subheader("Statement Summary")
 
-        with col2:
-            # Plot transactions chart if available
-            if data.get("transactions"):
-                st.subheader("Spending Chart")
-                dates = [t["date"] for t in data["transactions"]]
-                amounts = [t["amount"] for t in data["transactions"]]
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric(label="Cardholder Name", value=data.get("cardholder_name", "N/A"))
+        total_due = data.get("total_due") or 0.0
+        st.metric(label="Total Amount Due", value=f'₹ {total_due:,.2f}')
+        st.metric(label="Bank", value=data.get("bank", "N/A"))
 
-                fig, ax = plt.subplots(figsize=(10, 4))
-                ax.bar(dates, amounts, color="skyblue")
-                plt.xticks(rotation=45)
-                ax.set_ylabel("Amount")
-                ax.set_title("Transaction Amounts")
-                st.pyplot(fig)
-            else:
-                st.info("No transactions found to display a chart.")
+    with col2:
+        st.metric(label="Card (Last 4 Digits)", value=data.get("card_last_4", "N/A"))
+        st.metric(label="Payment Due Date", value=data.get("due_date", "N/A"))
 
-    else:
-        st.error("Could not parse the PDF. Please try another file.")
+    transactions = data.get("transactions")
+    if transactions:
+        with st.expander("View Full Transaction List"):
+            df = pd.DataFrame(transactions)
+            st.dataframe(df)
 
-    # Remove temporary file
-    os.remove(temp_path)
+    st.markdown("---")
+
+    if st.button("Parse Another Statement"):
+        st.session_state.parsed_data = None
+        st.rerun()

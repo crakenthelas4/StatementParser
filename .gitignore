@@ -1,0 +1,20 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+
+# Mac-specific files
+.DS_Store
+
+# Streamlit-specific files
+.streamlit/
+
+# Output and temporary folders
+output/
+streamlit_output/
+temp_files/
+api_output/
+temp_api_files/
+
+# Virtual environment
+venv/
+.venv/
